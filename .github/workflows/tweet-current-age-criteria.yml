@@ -1,4 +1,4 @@
-name: Fetch current age criteria
+name: Tweet current age criteria
 
 on:
   push:
@@ -15,18 +15,17 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - name: Cache gems
-      uses: actions/cache@v1
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-rubocop-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-rubocop-
     - name: Install gems
       run: |
         bundle install --jobs 4 --retry 3
     - name: Get current age criteria
       id: criteria
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
-    - name: test echo var (to be replaced with tweeting)
-      run: echo ${{ steps.criteria.outputs.age }}
+    - name: Tweet current age criteria
+      uses: devigned/go-twitter-action@v1
+      with:
+        message: ${{ steps.criteria.outputs.age }}
+        apiKey: ${{ secrets.API_KEY }}
+        apiKeySecret: ${{ secrets.API_KEY_SECRET }}
+        accessToken: ${{ secrets.ACCESS_TOKEN }}
+        accessTokenSecret: ${{ secrets.ACCESS_TOKEN_SECRET }}
