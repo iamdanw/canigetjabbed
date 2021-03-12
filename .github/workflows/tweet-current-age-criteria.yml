@@ -23,7 +23,14 @@ jobs:
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
       run: echo ${{ steps.criteria.outputs.age }}
+    - name: Should i text it?
+      id: should-i-send
+      run: |
+        if [[ '${{ steps.criteria.outputs.age }}' =~ [(0-4|6-9)]+ ]]; then
+            echo ::set-output name=match::true
+        fi
     - name: 'Send SMS Notification'
+      if: steps.should-i-send.outputs.match == 'true'
       uses: twilio-labs/actions-sms@v1
       with:
         fromPhoneNumber: '+447782588983'
