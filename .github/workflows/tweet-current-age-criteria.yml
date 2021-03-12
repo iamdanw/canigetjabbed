@@ -21,6 +21,25 @@ jobs:
     - name: Get current age criteria
       id: criteria
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
+    - name: Output age criteria
+      run: echo ${{ steps.criteria.outputs.age }}
+    - name: Should i text it?
+      id: should-i-send
+      run: |
+        if [[ '${{ steps.criteria.outputs.age }}' =~ [(0-4|6-9)]+ ]]; then
+            echo ::set-output name=match::true
+        fi
+    - name: 'Send SMS Notification'
+      if: steps.should-i-send.outputs.match == 'true'
+      uses: twilio-labs/actions-sms@v1
+      with:
+        fromPhoneNumber: '+447782588983'
+        toPhoneNumber: ${{ secrets.TO_PHONE_NUMBER }}
+        message: 'Jab booking criteria changed: ${{ steps.criteria.outputs.age }}'
+      env:
+        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
+        TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
     - name: Tweet current age criteria
       uses: devigned/go-twitter-action@v1
       with:
