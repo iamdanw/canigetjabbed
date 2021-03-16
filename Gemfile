@@ -8,3 +8,7 @@ gem "nokogiri"
 gem "rspec"
 gem "rubocop"
 gem 'rubocop-rspec', require: false
+
+group :development do
+  gem 'pry', '~> 0.13.1'
+end
