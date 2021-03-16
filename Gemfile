@@ -11,4 +11,5 @@ gem 'rubocop-rspec', require: false
 
 group :development do
   gem 'pry', '~> 0.13.1'
+  gem 'timecop'
 end
