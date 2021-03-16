@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+class DuplicateCriteriaError < StandardError
+end
+
 class CriteriaStore
   def initialize(json)
     @json = json
@@ -12,6 +15,8 @@ class CriteriaStore
   end
 
   def add(new_criteria)
+    raise DuplicateCriteriaError if new_criteria.sort == latest[:criteria].sort
+
     @json[:history].push(
       {
         captured_at: Time.now.utc.to_i,

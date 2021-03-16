@@ -64,5 +64,22 @@ RSpec.describe CriteriaStore do
       criteria_store.add(new_criteria)
       expect(criteria_store.latest[:criteria]).to match_array(new_criteria)
     end
+
+    context 'when the new criteria matches the existing latest criteria' do
+      let(:duplicate_new_criteria) do
+        [
+          'you are aged 55 or over',
+          'you are at high risk from coronavirus (clinically extremely vulnerable)',
+          'you are an eligible frontline health or social care worker',
+          'you have a condition that puts you at higher risk (clinically vulnerable)',
+          'you have a learning disability',
+          'you are a main carer for someone at high risk from coronavirus'
+        ]
+      end
+
+      it 'raises an error' do
+        expect { criteria_store.add(duplicate_new_criteria) }.to raise_error(DuplicateCriteriaError)
+      end
+    end
   end
 end
