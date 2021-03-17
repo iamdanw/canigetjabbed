@@ -8,3 +8,7 @@ gem "nokogiri"
 gem "rspec"
 gem "rubocop"
 gem 'rubocop-rspec', require: false
+
+group :development, :test do
+  gem 'dotenv-rails'
+end
