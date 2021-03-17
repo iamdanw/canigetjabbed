@@ -23,7 +23,7 @@ jobs:
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
       run: echo ${{ steps.criteria.outputs.age }}
-    - name: Should i text it?
+    - name: Should i post a notification?
       id: should-i-send
       run: |
         if [[ '${{ steps.criteria.outputs.age }}' =~ ${{ secrets.SMS_REGEX }} ]]; then
@@ -42,6 +42,7 @@ jobs:
         TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
     - name: Tweet current age criteria
       uses: devigned/go-twitter-action@v1
+      if: steps.should-i-send.outputs.match == 'true'
       with:
         message: ${{ steps.criteria.outputs.age }}
         apiKey: ${{ secrets.API_KEY }}
