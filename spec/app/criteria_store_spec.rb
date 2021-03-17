@@ -45,7 +45,7 @@ RSpec.describe CriteriaStore do
 
   describe '#latest' do
     it 'returns the most recently captured criteria' do
-      expect(criteria_store.latest[:captured_at]).to eq 1_615_531_654
+      expect(criteria_store.latest.captured_at).to eq 1_615_531_654
     end
   end
 
@@ -76,23 +76,23 @@ RSpec.describe CriteriaStore do
     it 'stores the captured_at utc timestamp' do
       Timecop.freeze(2021, 3, 14) do
         criteria_store.add(new_criteria)
-        expect(criteria_store.latest[:captured_at]).to eq 1_615_680_000
+        expect(criteria_store.latest.captured_at).to eq 1_615_680_000
       end
     end
 
     it 'stores the criteria' do
       criteria_store.add(new_criteria)
-      expect(criteria_store.latest[:criteria]).to match_array(new_criteria)
+      expect(criteria_store.latest.criteria).to match_array(new_criteria)
     end
 
     it 'stores the additions' do
       criteria_store.add(new_criteria)
-      expect(criteria_store.latest[:additions]).to match_array(additions)
+      expect(criteria_store.latest.additions).to match_array(additions)
     end
 
     it 'stores the deletions' do
       criteria_store.add(new_criteria)
-      expect(criteria_store.latest[:deletions]).to match_array(deletions)
+      expect(criteria_store.latest.deletions).to match_array(deletions)
     end
 
     context 'when the new criteria matches the existing latest criteria' do
