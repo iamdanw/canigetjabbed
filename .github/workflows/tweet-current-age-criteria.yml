@@ -18,8 +18,14 @@ jobs:
     - name: Install gems
       run: |
         bundle install --jobs 4 --retry 3
-    - name: Get current age criteria
+    - shell: bash
+      name: Get current age criteria
       id: criteria
+      env:
+           API_KEY: ${{ secrets.API_KEY }}
+           API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
+           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
       run: echo ${{ steps.criteria.outputs.age }}
@@ -40,12 +46,3 @@ jobs:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
         TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
-    - name: Tweet current age criteria
-      uses: devigned/go-twitter-action@v1
-      if: steps.should-i-send.outputs.match == 'true'
-      with:
-        message: ${{ steps.criteria.outputs.age }}
-        apiKey: ${{ secrets.API_KEY }}
-        apiKeySecret: ${{ secrets.API_KEY_SECRET }}
-        accessToken: ${{ secrets.ACCESS_TOKEN }}
-        accessTokenSecret: ${{ secrets.ACCESS_TOKEN_SECRET }}
