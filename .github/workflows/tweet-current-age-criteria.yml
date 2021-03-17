@@ -26,7 +26,7 @@ jobs:
     - name: Should i text it?
       id: should-i-send
       run: |
-        if [[ '${{ steps.criteria.outputs.age }}' =~ [(1-4|6-9)]+ ]]; then
+        if [[ '${{ steps.criteria.outputs.age }}' =~ ${{ secrets.SMS_REGEX }} ]]; then
             echo ::set-output name=match::true
         fi
     - name: 'Send SMS Notification'
