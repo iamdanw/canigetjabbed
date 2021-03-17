@@ -112,4 +112,8 @@ RSpec.describe CriteriaStore do
       end
     end
   end
+
+  describe '#save' do
+    it 'saves the current history to disk as a JSON file'
+  end
 end
