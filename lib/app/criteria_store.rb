@@ -20,8 +20,20 @@ class CriteriaStore
     @json[:history].push(
       {
         captured_at: Time.now.utc.to_i,
-        criteria: new_criteria
+        criteria: new_criteria,
+        additions: additions(latest[:criteria], new_criteria),
+        deletions: deletions(latest[:criteria], new_criteria)
       }
     )
+  end
+
+  private
+
+  def additions(previous_criteria, new_criteria)
+    new_criteria - previous_criteria
+  end
+
+  def deletions(previous_criteria, new_criteria)
+    previous_criteria - new_criteria
   end
 end

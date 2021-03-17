@@ -18,6 +18,13 @@ RSpec.describe CriteriaStore do
             'you have a condition that puts you at higher risk (clinically vulnerable)',
             'you have a learning disability',
             'you are a main carer for someone at high risk from coronavirus'
+          ],
+          additions: [
+            'you are aged 55 or over',
+            'you have a learning disability'
+          ],
+          deletions: [
+            'you are aged 60 or over'
           ]
         },
         {
@@ -28,7 +35,9 @@ RSpec.describe CriteriaStore do
             'you are an eligible frontline health or social care worker',
             'you have a condition that puts you at higher risk (clinically vulnerable)',
             'you are a main carer for someone at high risk from coronavirus'
-          ]
+          ],
+          additions: [],
+          deletions: []
         }
       ]
     }
@@ -46,9 +55,20 @@ RSpec.describe CriteriaStore do
         'you are aged 40 or over',
         'you are at high risk from coronavirus (clinically extremely vulnerable)',
         'you are an eligible frontline health or social care worker',
-        'you have a condition that puts you at higher risk (clinically vulnerable)',
         'you have a learning disability',
         'you are a main carer for someone at high risk from coronavirus',
+        'you are in a higher risk profession'
+      ]
+    end
+    let(:deletions) do
+      [
+        'you are aged 55 or over',
+        'you have a condition that puts you at higher risk (clinically vulnerable)'
+      ]
+    end
+    let(:additions) do
+      [
+        'you are aged 40 or over',
         'you are in a higher risk profession'
       ]
     end
@@ -63,6 +83,16 @@ RSpec.describe CriteriaStore do
     it 'stores the criteria' do
       criteria_store.add(new_criteria)
       expect(criteria_store.latest[:criteria]).to match_array(new_criteria)
+    end
+
+    it 'stores the additions' do
+      criteria_store.add(new_criteria)
+      expect(criteria_store.latest[:additions]).to match_array(additions)
+    end
+
+    it 'stores the deletions' do
+      criteria_store.add(new_criteria)
+      expect(criteria_store.latest[:deletions]).to match_array(deletions)
     end
 
     context 'when the new criteria matches the existing latest criteria' do
