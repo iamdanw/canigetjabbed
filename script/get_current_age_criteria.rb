@@ -7,12 +7,17 @@ require 'twitter'
 require('./lib/app/criteria_extractor')
 
 NHS_ENGLAND_VACCINATION_SITE = 'https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/book-coronavirus-vaccination/'
+TWEETING_ENABLED = ENV.fetch('TWEETING_ENABLED', 'disabled')
 
 page = URI.parse(NHS_ENGLAND_VACCINATION_SITE).open.read
 
 criteria = CriteriaExtractor.new(page).criteria
 
 age_criteria = criteria.filter { |item| item.include?('age') }.first
+
+puts age_criteria
+
+exit unless TWEETING_ENABLED == 'enabled'
 
 client = Twitter::REST::Client.new do |config|
   config.consumer_key        = ENV['API_KEY']
@@ -24,5 +29,3 @@ end
 tweet_text = "Now booking! You can now book a coronavirus vaccination appointment in England if:\n\n- #{age_criteria}"
 
 client.update(tweet_text)
-
-puts age_criteria

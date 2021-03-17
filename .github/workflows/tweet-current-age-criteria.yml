@@ -26,6 +26,7 @@ jobs:
            API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
            ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+           TWEETING_ENABLED: ${{ secrets.TWEETING_ENABLED }}
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
       run: echo ${{ steps.criteria.outputs.age }}
