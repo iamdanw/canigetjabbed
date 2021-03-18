@@ -21,12 +21,6 @@ jobs:
     - shell: bash
       name: Get current age criteria
       id: criteria
-      env:
-           API_KEY: ${{ secrets.API_KEY }}
-           API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
-           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-           TWEETING_ENABLED: ${{ secrets.TWEETING_ENABLED }}
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
       run: echo ${{ steps.criteria.outputs.age }}
@@ -47,3 +41,13 @@ jobs:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
         TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
+    - shell: bash
+      name: Tweet current age criteria
+      if: steps.should-i-send.outputs.match == 'true'
+      env:
+           API_KEY: ${{ secrets.API_KEY }}
+           API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
+           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+           TWEETING_ENABLED: ${{ secrets.TWEETING_ENABLED }}
+      run: bundle exec ruby script/tweet_current_age_criteria.rb '${{ steps.criteria.outputs.age }}'
