@@ -15,9 +15,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - name: Install gems
-      run: |
-        bundle install --jobs 4 --retry 3
+        bundler-cache: true
     - shell: bash
       name: Get current age criteria
       id: criteria
