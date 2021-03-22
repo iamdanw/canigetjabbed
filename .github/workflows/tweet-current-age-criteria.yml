@@ -3,7 +3,7 @@ name: Tweet current age criteria
 on:
   push:
   schedule:
-    - cron:  '*/15 * * * *'
+    - cron:  '*/2 * * * *'
 
 jobs:
   fetch:
