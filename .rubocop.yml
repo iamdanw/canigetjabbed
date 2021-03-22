@@ -16,6 +16,7 @@ AllCops:
   Exclude:
     - 'script/scratch.rb'
     - 'Gemfile'
+    - vendor/bundle/**/*
 
 Style/Documentation:
   Enabled: false
