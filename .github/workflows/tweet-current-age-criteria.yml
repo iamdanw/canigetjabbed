@@ -27,7 +27,7 @@ jobs:
     - name: Should i post a notification?
       id: should-i-send
       run: |
-        if [[ '${{ steps.criteria.outputs.age }}' =~ [(1-4|6-9)]+ ]]; then
+        if [[ '${{ steps.criteria.outputs.age }}' =~ [(1-4|6-9)]+ ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
             echo ::set-output name=match::true
         fi
     - name: 'Send SMS Notification'
@@ -49,5 +49,4 @@ jobs:
            API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
            ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-           TWEETING_ENABLED: ${{ secrets.TWEETING_ENABLED }}
       run: bundle exec ruby script/tweet_current_age_criteria.rb '${{ steps.criteria.outputs.age }}'

@@ -3,11 +3,7 @@
 require 'dotenv/load'
 require 'twitter'
 
-TWEETING_ENABLED = ENV.fetch('TWEETING_ENABLED', 'disabled')
-
 age_criteria = ARGV[0]
-
-exit unless TWEETING_ENABLED == 'enabled'
 
 client = Twitter::REST::Client.new do |config|
   config.consumer_key = ENV['API_KEY']
