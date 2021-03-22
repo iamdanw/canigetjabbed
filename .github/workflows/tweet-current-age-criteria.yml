@@ -3,7 +3,7 @@ name: Tweet current age criteria
 on:
   push:
   schedule:
-    - cron:  '*/15 * * * *'
+    - cron:  '*/2 * * * *'
 
 jobs:
   fetch:
@@ -18,7 +18,8 @@ jobs:
     - name: Install gems
       run: |
         bundle install --jobs 4 --retry 3
-    - name: Get current age criteria
+    - shell: bash
+      name: Get current age criteria
       id: criteria
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
@@ -26,7 +27,7 @@ jobs:
     - name: Should i post a notification?
       id: should-i-send
       run: |
-        if [[ '${{ steps.criteria.outputs.age }}' =~ ${{ secrets.SMS_REGEX }} ]]; then
+        if [[ '${{ steps.criteria.outputs.age }}' =~ [(1-4|6-9)]+ ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
             echo ::set-output name=match::true
         fi
     - name: 'Send SMS Notification'
@@ -40,12 +41,12 @@ jobs:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
         TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
-    - name: Tweet current age criteria
-      uses: devigned/go-twitter-action@v1
+    - shell: bash
+      name: Tweet current age criteria
       if: steps.should-i-send.outputs.match == 'true'
-      with:
-        message: ${{ steps.criteria.outputs.age }}
-        apiKey: ${{ secrets.API_KEY }}
-        apiKeySecret: ${{ secrets.API_KEY_SECRET }}
-        accessToken: ${{ secrets.ACCESS_TOKEN }}
-        accessTokenSecret: ${{ secrets.ACCESS_TOKEN_SECRET }}
+      env:
+           API_KEY: ${{ secrets.API_KEY }}
+           API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
+           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+      run: bundle exec ruby script/tweet_current_age_criteria.rb '${{ steps.criteria.outputs.age }}'
