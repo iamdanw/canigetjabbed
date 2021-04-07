@@ -2,6 +2,7 @@ name: Tweet current age criteria
 
 on:
   push:
+  workflow_dispatch:
   schedule:
     - cron:  '*/2 * * * *'
 
