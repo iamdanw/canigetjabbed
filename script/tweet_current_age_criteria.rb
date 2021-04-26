@@ -12,7 +12,9 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
 end
 
-tweet_text = "Now booking! You can now book a coronavirus vaccination appointment in England if:\n\n- #{age_criteria}"
+message = 'Now booking! You can now book a coronavirus vaccination appointment in England if:'
+booking_link = 'https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/book-coronavirus-vaccination/'
+tweet_text = "#{message}\n\n- #{age_criteria} \n\n#{booking_link}"
 
 client.update(tweet_text)
 
