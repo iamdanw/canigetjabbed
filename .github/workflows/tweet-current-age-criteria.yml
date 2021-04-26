@@ -22,11 +22,11 @@ jobs:
       id: criteria
       run: echo ::set-output name=age::$(bundle exec ruby script/get_current_age_criteria.rb)
     - name: Output age criteria
-      run: echo ${{ steps.criteria.outputs.age }}
+      run: echo "${{ steps.criteria.outputs.age }}"
     - name: Should i post a notification?
       id: should-i-send
       run: |
-        if [[ ! '${{ steps.criteria.outputs.age }}' =~ 'aged 45' ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
+        if [[ ! "${{ steps.criteria.outputs.age }}" =~ 'aged 45' ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
             echo ::set-output name=match::true
         fi
     - name: 'Send SMS Notification'
@@ -35,7 +35,7 @@ jobs:
       with:
         fromPhoneNumber: '+447782588983'
         toPhoneNumber: ${{ secrets.TO_PHONE_NUMBER }}
-        message: 'Jab booking criteria changed: ${{ steps.criteria.outputs.age }}'
+        message: "Jab booking criteria changed: ${{ steps.criteria.outputs.age }}"
       env:
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
@@ -48,4 +48,4 @@ jobs:
            API_KEY_SECRET: ${{ secrets.API_KEY_SECRET }}
            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
            ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-      run: bundle exec ruby script/tweet_current_age_criteria.rb '${{ steps.criteria.outputs.age }}'
+      run: bundle exec ruby script/tweet_current_age_criteria.rb "${{ steps.criteria.outputs.age }}"
