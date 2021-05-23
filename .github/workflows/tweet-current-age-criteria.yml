@@ -26,7 +26,7 @@ jobs:
     - name: Should i post a notification?
       id: should-i-send
       run: |
-        if [[ ! "${{ steps.criteria.outputs.age }}" =~ 'aged 34' ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
+        if [[ ! "${{ steps.criteria.outputs.age }}" =~ 'aged 32' ]] && [[ '${{ secrets.TWEETING_ENABLED }}' == 'enabled' ]]; then
             echo ::set-output name=match::true
         fi
     - name: 'Send SMS Notification'
